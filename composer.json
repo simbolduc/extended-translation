@@ -1,0 +1,24 @@
+{
+    "name": "azuriom/extended-translation",
+    "type": "azuriom-plugin",
+    "description": "Translate news posts, pages, and navbar items from the admin panel without changing Azuriom core.",
+    "autoload": {
+        "psr-4": {
+            "Azuriom\\Plugin\\ExtendedTranslation\\": "src/"
+        }
+    },
+    "replace": {
+        "guzzlehttp/guzzle": "*",
+        "guzzlehttp/promises": "*",
+        "guzzlehttp/psr7": "*",
+        "monolog/monolog": "*",
+        "nesbot/carbon": "*",
+        "psr/container": "*",
+        "psr/event-dispatcher": "*",
+        "psr/http-client": "*",
+        "psr/http-factory": "*",
+        "psr/http-message": "*",
+        "psr/log": "*",
+        "psr/simple-cache": "*"
+    }
+}

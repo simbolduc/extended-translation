@@ -1,0 +1,17 @@
+.ext-translation-langs {
+    gap: 0.35rem;
+}
+
+.ext-translation-original {
+    max-height: 32rem;
+    overflow: auto;
+    padding: 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    background: var(--bs-tertiary-bg);
+}
+
+.ext-translation-original img {
+    max-width: 100%;
+    height: auto;
+}

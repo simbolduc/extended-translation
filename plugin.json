@@ -1,0 +1,18 @@
+{
+    "id": "extended-translation",
+    "name": "Extended Translation",
+    "description": "Translate news posts, pages, and navbar items from the admin panel without changing Azuriom core.",
+    "version": "1.0.0",
+    "url": "https://shadowleveling.fr",
+    "authors": [
+        "ShadowLeveling"
+    ],
+    "azuriom_api": "1.2.0",
+    "providers": [
+        "\\Azuriom\\Plugin\\ExtendedTranslation\\Providers\\ExtendedTranslationServiceProvider",
+        "\\Azuriom\\Plugin\\ExtendedTranslation\\Providers\\RouteServiceProvider"
+    ],
+    "dependencies": {
+        "sl-language?": "^1.0.0"
+    }
+}
