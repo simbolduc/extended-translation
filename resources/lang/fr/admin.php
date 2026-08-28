@@ -49,6 +49,13 @@ return [
         'inject_label' => 'Ajouter les boutons Traduire aux pages d’administration originales d’Azuriom',
     ],
 
+    'permissions' => [
+        'posts' => 'Traduire les articles',
+        'pages' => 'Traduire les pages',
+        'navbar' => 'Traduire la barre de navigation',
+        'settings' => 'Gérer les paramètres de traduction',
+    ],
+
     'actions' => [
         'translate' => 'Traduire',
         'save' => 'Enregistrer la traduction',

@@ -4,6 +4,7 @@ namespace Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin;
 
 use Azuriom\Http\Requests\Traits\ConvertCheckbox;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -41,8 +42,6 @@ class SettingsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('admin.posts') === true
-            || $this->user()?->can('admin.pages') === true
-            || $this->user()?->can('admin.navbar') === true;
+        return $this->user()?->can(Permissions::SETTINGS) === true;
     }
 }

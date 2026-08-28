@@ -49,6 +49,13 @@ return [
         'inject_label' => 'Inject Translate buttons into Azuriom’s original admin pages',
     ],
 
+    'permissions' => [
+        'posts' => 'Translate news articles',
+        'pages' => 'Translate pages',
+        'navbar' => 'Translate navbar items',
+        'settings' => 'Manage translation settings',
+    ],
+
     'actions' => [
         'translate' => 'Translate',
         'save' => 'Save translation',

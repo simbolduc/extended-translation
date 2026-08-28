@@ -9,6 +9,7 @@ use Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin\NavbarElementTranslat
 use Azuriom\Plugin\ExtendedTranslation\Models\NavbarElementTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
 use Azuriom\Plugin\ExtendedTranslation\Support\NavbarTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -18,7 +19,7 @@ class NavbarElementTranslationController extends Controller
         private LocaleCatalog $locales,
         private NavbarTranslator $translator,
     ) {
-        $this->middleware('can:admin.navbar');
+        $this->middleware('can:'.Permissions::NAVBAR);
     }
 
     /**

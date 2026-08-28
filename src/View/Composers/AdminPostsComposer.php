@@ -4,10 +4,12 @@ namespace Azuriom\Plugin\ExtendedTranslation\View\Composers;
 
 use Azuriom\Models\Post;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PluginOptions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class AdminPostsComposer
@@ -21,7 +23,7 @@ class AdminPostsComposer
 
     public function compose(View $view): void
     {
-        if (! PluginOptions::injectCoreAdmin()) {
+        if (! PluginOptions::injectCoreAdmin() || ! Gate::allows(Permissions::POSTS)) {
             return;
         }
 

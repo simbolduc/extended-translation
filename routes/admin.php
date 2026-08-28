@@ -4,12 +4,15 @@ use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\NavbarElementTranslatio
 use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\PageTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\PostTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\SettingsController;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+Route::middleware('can:'.Permissions::SETTINGS)->group(function () {
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+});
 
-Route::middleware('can:admin.posts')->group(function () {
+Route::middleware('can:'.Permissions::POSTS)->group(function () {
     Route::get('/', [PostTranslationController::class, 'index'])->name('posts.index');
     Route::get('/posts/{post}/{locale}', [PostTranslationController::class, 'edit'])
         ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
@@ -22,7 +25,7 @@ Route::middleware('can:admin.posts')->group(function () {
         ->name('posts.destroy');
 });
 
-Route::middleware('can:admin.pages')->group(function () {
+Route::middleware('can:'.Permissions::PAGES)->group(function () {
     Route::get('/pages', [PageTranslationController::class, 'index'])->name('pages.index');
     Route::get('/pages/{page}/{locale}', [PageTranslationController::class, 'edit'])
         ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
@@ -35,7 +38,7 @@ Route::middleware('can:admin.pages')->group(function () {
         ->name('pages.destroy');
 });
 
-Route::middleware('can:admin.navbar')->group(function () {
+Route::middleware('can:'.Permissions::NAVBAR)->group(function () {
     Route::get('/navbar', [NavbarElementTranslationController::class, 'index'])->name('navbar.index');
     Route::get('/navbar/{navbarElement}/{locale}', [NavbarElementTranslationController::class, 'edit'])
         ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')

@@ -14,9 +14,11 @@
             @if($locales->isEmpty())
                 <div class="alert alert-warning">
                     {{ trans('extended-translation::admin.no_locales') }}
-                    <a href="{{ route('extended-translation.admin.settings') }}" class="alert-link">
-                        {{ trans('extended-translation::admin.nav.settings') }}
-                    </a>
+                    @can('extended-translation.settings')
+                        <a href="{{ route('extended-translation.admin.settings') }}" class="alert-link">
+                            {{ trans('extended-translation::admin.nav.settings') }}
+                        </a>
+                    @endcan
                 </div>
             @elseif($posts->isEmpty())
                 <p class="mb-0">{{ trans('extended-translation::admin.empty') }}</p>

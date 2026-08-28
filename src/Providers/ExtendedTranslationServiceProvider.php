@@ -3,28 +3,32 @@
 namespace Azuriom\Plugin\ExtendedTranslation\Providers;
 
 use Azuriom\Extensions\Plugin\BasePluginServiceProvider;
+use Azuriom\Http\Middleware\EncryptCookies;
 use Azuriom\Models\ActionLog;
 use Azuriom\Models\NavbarElement;
 use Azuriom\Models\Page;
+use Azuriom\Models\Permission;
 use Azuriom\Models\Post;
 use Azuriom\Models\Setting;
+use Azuriom\Plugin\ExtendedTranslation\Middleware\SetLocale;
 use Azuriom\Plugin\ExtendedTranslation\Models\NavbarElementTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Models\PageTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Models\PostTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
 use Azuriom\Plugin\ExtendedTranslation\Support\NavbarTranslator;
-use Azuriom\Http\Middleware\EncryptCookies;
 use Azuriom\Plugin\ExtendedTranslation\Support\PageTranslator;
-use Azuriom\Plugin\ExtendedTranslation\Middleware\SetLocale;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminNavbarComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\LocaleComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPagesComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPostsComposer;
+use Azuriom\Plugin\ExtendedTranslation\View\Composers\LocaleComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\NavbarComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\TranslatePostsComposer;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
+use Illuminate\View\View as IlluminateView;
 
 class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
 {
@@ -66,6 +70,8 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
         $this->registerRouteDescriptions();
         $this->registerAdminNavigation();
 
+        Permission::registerPermissions(Permissions::all());
+
         Setting::markAsJsonEncoded('extended-translation.locales');
 
         Post::resolveRelationUsing('translations', function (Post $post) {
@@ -88,9 +94,21 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
             $this->app->make(PageTranslator::class)->apply($page);
         });
 
-        View::composer(['admin.posts.index', 'admin.posts.edit'], AdminPostsComposer::class);
-        View::composer(['admin.pages.index', 'admin.pages.edit'], AdminPagesComposer::class);
-        View::composer(['admin.navbar-elements.index', 'admin.navbar-elements.edit'], AdminNavbarComposer::class);
+        $this->registerAdminInjectComposer(
+            ['admin.posts.index', 'admin.posts.edit'],
+            AdminPostsComposer::class,
+            Permissions::POSTS,
+        );
+        $this->registerAdminInjectComposer(
+            ['admin.pages.index', 'admin.pages.edit'],
+            AdminPagesComposer::class,
+            Permissions::PAGES,
+        );
+        $this->registerAdminInjectComposer(
+            ['admin.navbar-elements.index', 'admin.navbar-elements.edit'],
+            AdminNavbarComposer::class,
+            Permissions::NAVBAR,
+        );
         View::composer(['*', 'elements.navbar'], TranslatePostsComposer::class);
         View::composer([
             'elements.navbar',
@@ -163,23 +181,48 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
                 'type' => 'dropdown',
                 'icon' => 'bi bi-translate',
                 'route' => 'extended-translation.admin.*',
-                'permission' => ['admin.posts', 'admin.pages', 'admin.navbar'],
+                'permission' => [
+                    Permissions::POSTS,
+                    Permissions::PAGES,
+                    Permissions::NAVBAR,
+                    Permissions::SETTINGS,
+                ],
                 'items' => [
                     'extended-translation.admin.posts.index' => [
                         'name' => trans('extended-translation::admin.nav.posts'),
-                        'permission' => 'admin.posts',
+                        'permission' => Permissions::POSTS,
                     ],
                     'extended-translation.admin.pages.index' => [
                         'name' => trans('extended-translation::admin.nav.pages'),
-                        'permission' => 'admin.pages',
+                        'permission' => Permissions::PAGES,
                     ],
                     'extended-translation.admin.navbar.index' => [
                         'name' => trans('extended-translation::admin.nav.navbar'),
-                        'permission' => 'admin.navbar',
+                        'permission' => Permissions::NAVBAR,
                     ],
-                    'extended-translation.admin.settings' => trans('extended-translation::admin.nav.settings'),
+                    'extended-translation.admin.settings' => [
+                        'name' => trans('extended-translation::admin.nav.settings'),
+                        'permission' => Permissions::SETTINGS,
+                    ],
                 ],
             ],
         ];
+    }
+
+    /**
+     * Register a core-admin inject composer only when the user can translate that resource.
+     *
+     * @param  array<int, string>  $views
+     * @param  class-string  $composer
+     */
+    protected function registerAdminInjectComposer(array $views, string $composer, string $permission): void
+    {
+        View::composer($views, function (IlluminateView $view) use ($composer, $permission): void {
+            if (! Gate::allows($permission)) {
+                return;
+            }
+
+            app($composer)->compose($view);
+        });
     }
 }

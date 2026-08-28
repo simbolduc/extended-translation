@@ -6,6 +6,7 @@ use Azuriom\Http\Controllers\Controller;
 use Azuriom\Models\Setting;
 use Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin\SettingsRequest;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PluginOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -15,16 +16,7 @@ class SettingsController extends Controller
     public function __construct(
         private LocaleCatalog $locales,
     ) {
-        $this->middleware(function ($request, $next) {
-            abort_unless(
-                $request->user()?->can('admin.posts')
-                    || $request->user()?->can('admin.pages')
-                    || $request->user()?->can('admin.navbar'),
-                403
-            );
-
-            return $next($request);
-        });
+        $this->middleware('can:'.Permissions::SETTINGS);
     }
 
     /**

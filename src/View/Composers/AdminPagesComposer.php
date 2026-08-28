@@ -5,9 +5,11 @@ namespace Azuriom\Plugin\ExtendedTranslation\View\Composers;
 use Azuriom\Models\Page;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
 use Azuriom\Plugin\ExtendedTranslation\Support\PageTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PluginOptions;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class AdminPagesComposer
@@ -21,7 +23,7 @@ class AdminPagesComposer
 
     public function compose(View $view): void
     {
-        if (! PluginOptions::injectCoreAdmin()) {
+        if (! PluginOptions::injectCoreAdmin() || ! Gate::allows(Permissions::PAGES)) {
             return;
         }
 

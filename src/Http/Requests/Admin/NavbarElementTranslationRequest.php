@@ -2,6 +2,7 @@
 
 namespace Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin;
 
+use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NavbarElementTranslationRequest extends FormRequest
@@ -23,6 +24,6 @@ class NavbarElementTranslationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('admin.navbar') === true;
+        return $this->user()?->can(Permissions::NAVBAR) === true;
     }
 }
