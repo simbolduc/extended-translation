@@ -40,7 +40,7 @@ return [
 
     'settings' => [
         'title' => 'Settings',
-        'help' => 'Choose the languages that should appear when translating news articles, pages, and navbar items. The site language switcher controls which version visitors see.',
+        'help' => 'Choose the languages that should appear when translating news articles, pages, and navbar items, on the public language page, and in the theme language dropdown.',
         'languages_heading' => 'Languages',
         'available' => 'Available languages',
         'default' => 'Site language',

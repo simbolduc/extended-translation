@@ -2,17 +2,36 @@
 
 namespace Azuriom\Plugin\ExtendedTranslation\Support;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 
 class LocaleCatalog
 {
+    public const COOKIE = 'et-locale';
+
+    /**
+     * @var Collection<string, string>|null
+     */
+    private ?Collection $enabledCache = null;
+
     /**
      * Locales that can be used to translate posts.
      *
      * @return Collection<string, string> locale code => native name
      */
     public function enabled(): Collection
+    {
+        return $this->enabledCache ??= $this->resolveEnabledList();
+    }
+
+    /**
+     * @return Collection<string, string>
+     */
+    protected function resolveEnabledList(): Collection
     {
         $selected = $this->selectedLocales();
 
@@ -58,11 +77,108 @@ class LocaleCatalog
      */
     public function candidates(?string $locale = null): array
     {
-        $locale ??= app()->getLocale();
+        $locale ??= $this->current();
         $normalized = str_replace('-', '_', $locale);
+        $hyphenated = str_replace('_', '-', $locale);
         $primary = explode('_', $normalized)[0] ?? $normalized;
 
-        return array_values(array_unique([$locale, $normalized, $primary]));
+        return array_values(array_unique([$locale, $normalized, $hyphenated, $primary]));
+    }
+
+    /**
+     * Map a locale code (cookie, request, or app locale) to an enabled catalog code.
+     */
+    public function resolveEnabled(?string $locale): ?string
+    {
+        if (! is_string($locale) || $locale === '') {
+            return null;
+        }
+
+        foreach ($this->candidates($locale) as $candidate) {
+            if ($this->isEnabled($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Locale persisted for this visitor (cookie, then session).
+     */
+    public function persisted(?Request $request = null): ?string
+    {
+        $request ??= request();
+
+        if (! $request instanceof Request) {
+            return null;
+        }
+
+        $values = [$request->cookie(self::COOKIE)];
+
+        if ($request->hasSession()) {
+            $values[] = $request->session()->get(self::COOKIE);
+        }
+
+        foreach ($values as $value) {
+            $resolved = $this->usablePersistedValue($value);
+
+            if ($resolved !== null) {
+                return $resolved;
+            }
+        }
+
+        return null;
+    }
+
+    public function current(): string
+    {
+        return $this->persisted()
+            ?? $this->resolveEnabled(app()->getLocale())
+            ?? $this->enabled()->keys()->first()
+            ?? $this->defaultLocale();
+    }
+
+    public function shortCode(?string $locale = null): string
+    {
+        $locale ??= $this->current();
+        $primary = preg_split('/[-_]/', $locale)[0] ?? $locale;
+
+        return strtoupper($primary);
+    }
+
+    public function apply(string $locale): void
+    {
+        $normalized = str_replace('-', '_', $locale);
+
+        app()->setLocale($normalized);
+        Carbon::setLocale($normalized);
+    }
+
+    public function makeCookie(string $locale): SymfonyCookie
+    {
+        return Cookie::forever(self::COOKIE, $locale);
+    }
+
+    public function persist(Request $request, string $locale): SymfonyCookie
+    {
+        $this->apply($locale);
+
+        $request->session()->put(self::COOKIE, $locale);
+
+        return $this->makeCookie($locale);
+    }
+
+    /**
+     * Ignore leftover encrypted cookies so a plaintext `en` / `fr` value can take over.
+     */
+    protected function usablePersistedValue(mixed $value): ?string
+    {
+        if (! is_string($value) || $value === '' || str_starts_with($value, 'eyJ')) {
+            return null;
+        }
+
+        return $this->resolveEnabled($value);
     }
 
     /**
@@ -86,17 +202,6 @@ class LocaleCatalog
      */
     protected function defaults(): Collection
     {
-        $slLanguage = 'Azuriom\\Plugin\\SlLanguage\\LocaleManager';
-
-        if (plugins()->isEnabled('sl-language') && class_exists($slLanguage) && app()->bound($slLanguage)) {
-            /** @var Collection<string, string> $available */
-            $available = app($slLanguage)->available();
-
-            if ($available->isNotEmpty()) {
-                return $available;
-            }
-        }
-
         $codes = collect([$this->defaultLocale(), 'en', 'fr'])->unique();
 
         return $this->named($codes)->intersectByKeys($this->installed());

@@ -1,0 +1,1 @@
+@include('extended-translation::dropdown')

@@ -43,7 +43,7 @@ class NavbarTranslator
         }
 
         $original = $this->originals[$element]['name'];
-        $translation = $this->forElement($element);
+        $translation = $this->forElement($element, $this->locales->current());
         $value = $translation?->name;
 
         $element->setAttribute(

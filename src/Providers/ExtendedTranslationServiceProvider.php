@@ -13,12 +13,17 @@ use Azuriom\Plugin\ExtendedTranslation\Models\PageTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Models\PostTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
 use Azuriom\Plugin\ExtendedTranslation\Support\NavbarTranslator;
+use Azuriom\Http\Middleware\EncryptCookies;
 use Azuriom\Plugin\ExtendedTranslation\Support\PageTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Middleware\SetLocale;
 use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminNavbarComposer;
+use Azuriom\Plugin\ExtendedTranslation\View\Composers\LocaleComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPagesComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPostsComposer;
+use Azuriom\Plugin\ExtendedTranslation\View\Composers\NavbarComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\TranslatePostsComposer;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\View;
 
 class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
@@ -32,6 +37,19 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
         $this->app->singleton(PostTranslator::class);
         $this->app->singleton(PageTranslator::class);
         $this->app->singleton(NavbarTranslator::class);
+
+        EncryptCookies::except(LocaleCatalog::COOKIE);
+
+        $this->app->afterResolving(EncryptCookies::class, function (EncryptCookies $cookies) {
+            $cookies->disableFor(LocaleCatalog::COOKIE);
+        });
+
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->app->make(Kernel::class)
+            ->appendMiddlewareToGroup('web', SetLocale::class);
     }
 
     /**
@@ -39,9 +57,13 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
      */
     public function boot(): void
     {
+        $this->app['router']->pushMiddlewareToGroup('web', SetLocale::class);
+
+        View::composer('*', LocaleComposer::class);
         $this->loadViews();
         $this->loadTranslations();
         $this->loadMigrations();
+        $this->registerRouteDescriptions();
         $this->registerAdminNavigation();
 
         Setting::markAsJsonEncoded('extended-translation.locales');
@@ -70,6 +92,11 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
         View::composer(['admin.pages.index', 'admin.pages.edit'], AdminPagesComposer::class);
         View::composer(['admin.navbar-elements.index', 'admin.navbar-elements.edit'], AdminNavbarComposer::class);
         View::composer(['*', 'elements.navbar'], TranslatePostsComposer::class);
+        View::composer([
+            'elements.navbar',
+            'extended-translation::selector',
+            'extended-translation::dropdown',
+        ], NavbarComposer::class);
 
         ActionLog::registerLogs([
             'extended-translation.posts.updated' => [
@@ -109,6 +136,18 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
                 'model' => Page::class,
             ],
         ]);
+    }
+
+    /**
+     * Returns the routes that should be able to be added to the navbar.
+     *
+     * @return array<string, string>
+     */
+    protected function routeDescriptions(): array
+    {
+        return [
+            'extended-translation.language' => trans('extended-translation::messages.title'),
+        ];
     }
 
     /**

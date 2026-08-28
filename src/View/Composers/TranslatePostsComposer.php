@@ -28,6 +28,10 @@ class TranslatePostsComposer
             return;
         }
 
+        if (isset($view['navbar'])) {
+            $this->translate($view['navbar']);
+        }
+
         foreach ($view->getData() as $value) {
             $this->translate($value);
         }

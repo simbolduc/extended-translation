@@ -47,7 +47,7 @@ class PostTranslator
         }
 
         $original = $this->originals[$post];
-        $translation = $this->forPost($post);
+        $translation = $this->forPost($post, $this->locales->current());
 
         foreach (['title', 'description', 'content'] as $field) {
             $value = $translation?->{$field};

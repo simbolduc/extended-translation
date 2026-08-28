@@ -47,7 +47,7 @@ class PageTranslator
         }
 
         $original = $this->originals[$page];
-        $translation = $this->forPage($page);
+        $translation = $this->forPage($page, $this->locales->current());
 
         foreach (['title', 'description', 'content'] as $field) {
             $value = $translation?->{$field};

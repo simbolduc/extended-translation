@@ -40,7 +40,7 @@ return [
 
     'settings' => [
         'title' => 'Paramètres',
-        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages et les éléments du menu. Le sélecteur de langue du site détermine la version affichée aux visiteurs.',
+        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages et les éléments du menu, ainsi que sur la page publique de choix de langue et dans le menu déroulant des thèmes.',
         'languages_heading' => 'Langues',
         'available' => 'Langues disponibles',
         'default' => 'Langue du site',

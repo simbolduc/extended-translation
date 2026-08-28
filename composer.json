@@ -1,7 +1,7 @@
 {
     "name": "azuriom/extended-translation",
     "type": "azuriom-plugin",
-    "description": "Translate news posts, pages, and navbar items from the admin panel without changing Azuriom core.",
+    "description": "Translate news posts, pages, and navbar items from the admin panel, and provide a language dropdown for themes.",
     "autoload": {
         "psr-4": {
             "Azuriom\\Plugin\\ExtendedTranslation\\": "src/"
