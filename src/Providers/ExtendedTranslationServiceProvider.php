@@ -22,9 +22,9 @@ use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminNavbarComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPagesComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPostsComposer;
+use Azuriom\Plugin\ExtendedTranslation\View\Composers\LanguageSelectorComposer;
 use Azuriom\Plugin\ExtendedTranslation\View\Composers\LocaleComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\NavbarComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\TranslatePostsComposer;
+use Azuriom\Plugin\ExtendedTranslation\View\Composers\TranslateNavbarComposer;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -109,12 +109,12 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
             AdminNavbarComposer::class,
             Permissions::NAVBAR,
         );
-        View::composer(['*', 'elements.navbar'], TranslatePostsComposer::class);
+        View::composer('elements.navbar', TranslateNavbarComposer::class);
         View::composer([
             'elements.navbar',
             'extended-translation::selector',
             'extended-translation::dropdown',
-        ], NavbarComposer::class);
+        ], LanguageSelectorComposer::class);
 
         ActionLog::registerLogs([
             'extended-translation.posts.updated' => [
