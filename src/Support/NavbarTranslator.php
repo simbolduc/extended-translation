@@ -53,7 +53,7 @@ class NavbarTranslator
         $element->syncOriginalAttribute('name');
     }
 
-    public function forElement(NavbarElement $element, ?string $locale = null): ?NavbarElementTranslation
+    private function forElement(NavbarElement $element, ?string $locale = null): ?NavbarElementTranslation
     {
         $candidates = $this->locales->candidates($locale);
         $byLocale = $this->allByElement()->get($element->id);

@@ -22,8 +22,6 @@ Entourez l’inclusion avec la directive Azuriom `@plugin` pour que le thème fo
 @endplugin
 ```
 
-`extended-translation::selector` est un alias de la même vue (conservé pour les thèmes plus anciens).
-
 ## Exemple dans la barre de navigation
 
 Placez le menu dans une liste d’utilitaires à droite, à côté de Connexion / Inscription :

@@ -14,14 +14,11 @@ return [
     'empty' => 'Aucun article pour le moment. Créez d’abord un article, puis traduisez-le ici.',
     'original' => 'Original',
     'source' => 'Article source',
-    'missing' => 'Manquante',
     'done' => 'Traduit',
     'stale' => 'L’original a été modifié après cette traduction',
     'edit_original' => 'Modifier l’original',
-    'start_from_original' => 'Copier l’original dans ce formulaire',
     'delete_translation' => 'Supprimer cette traduction',
     'translate_to' => 'Traduction (:locale)',
-    'languages' => 'Langues',
     'no_locales' => 'Sélectionnez au moins une langue dans les paramètres du plugin.',
 
     'pages' => [
@@ -63,7 +60,6 @@ return [
 
     'fields' => [
         'status' => 'Traductions',
-        'language' => 'Langue',
     ],
 
     'logs' => [

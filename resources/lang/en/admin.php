@@ -14,14 +14,11 @@ return [
     'empty' => 'No news articles yet. Create a post first, then translate it here.',
     'original' => 'Original',
     'source' => 'Source article',
-    'missing' => 'Missing',
     'done' => 'Translated',
     'stale' => 'Original updated after this translation',
     'edit_original' => 'Edit original',
-    'start_from_original' => 'Copy original into this form',
     'delete_translation' => 'Delete this translation',
     'translate_to' => 'Translation (:locale)',
-    'languages' => 'Languages',
     'no_locales' => 'Select at least one language in the plugin settings.',
 
     'pages' => [
@@ -63,7 +60,6 @@ return [
 
     'fields' => [
         'status' => 'Translations',
-        'language' => 'Language',
     ],
 
     'logs' => [

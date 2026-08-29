@@ -60,7 +60,7 @@ class PageTranslator
         }
     }
 
-    public function forPage(Page $page, ?string $locale = null): ?PageTranslation
+    private function forPage(Page $page, ?string $locale = null): ?PageTranslation
     {
         $candidates = $this->locales->candidates($locale);
         $byLocale = $this->allByPage()->get($page->id);

@@ -9,7 +9,6 @@ use Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin\PageTranslationReques
 use Azuriom\Plugin\ExtendedTranslation\Models\PageTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
 use Azuriom\Plugin\ExtendedTranslation\Support\PageTranslator;
-use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -19,7 +18,7 @@ class PageTranslationController extends Controller
         private LocaleCatalog $locales,
         private PageTranslator $translator,
     ) {
-        $this->middleware('can:'.Permissions::PAGES);
+        //
     }
 
     /**

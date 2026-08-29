@@ -60,7 +60,7 @@ class PostTranslator
         }
     }
 
-    public function forPost(Post $post, ?string $locale = null): ?PostTranslation
+    private function forPost(Post $post, ?string $locale = null): ?PostTranslation
     {
         $candidates = $this->locales->candidates($locale);
         $byLocale = $this->allByPost()->get($post->id);

@@ -8,7 +8,6 @@ use Azuriom\Models\Post;
 use Azuriom\Plugin\ExtendedTranslation\Http\Requests\Admin\PostTranslationRequest;
 use Azuriom\Plugin\ExtendedTranslation\Models\PostTranslation;
 use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
-use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -19,7 +18,7 @@ class PostTranslationController extends Controller
         private LocaleCatalog $locales,
         private PostTranslator $translator,
     ) {
-        $this->middleware('can:'.Permissions::POSTS);
+        //
     }
 
     /**

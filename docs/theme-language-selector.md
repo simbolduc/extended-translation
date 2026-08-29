@@ -22,8 +22,6 @@ Wrap the include with Azuriom’s `@plugin` directive so the theme still works w
 @endplugin
 ```
 
-`extended-translation::selector` is an alias of the same view (kept for older themes).
-
 ## Navbar example
 
 Place the dropdown in a right-side utility list, next to login / register:
