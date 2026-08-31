@@ -2,7 +2,7 @@
     "id": "extended-translation",
     "name": "Extended Translation",
     "description": "Translate news posts, pages, navbar items, and FAQ questions from the admin panel, and provide a language dropdown for themes.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "url": "https://simbolduc.ca",
     "authors": [
         "coulis"
