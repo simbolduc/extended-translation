@@ -4,7 +4,9 @@
 
 ## English
 
-Azuriom plugin to translate news posts, pages, and navbar items from the admin panel, without changing Azuriom core. It also provides a public language dropdown that themes can include.
+Azuriom plugin to translate news posts, pages, navbar items, and FAQ questions from the admin panel, without changing Azuriom core. It also provides a public language dropdown that themes can include.
+
+FAQ translation is optional: install and enable the [FAQ](https://market.azuriom.com/resources/4) plugin to show the FAQ item in **Admin → Translations**.
 
 ### Permissions
 
@@ -17,6 +19,7 @@ Grant these from **Admin → Roles**. Admin roles already have every permission.
 | `extended-translation.posts` | Translate news articles. Also required to show the Translate button on Azuriom’s Posts admin pages. |
 | `extended-translation.pages` | Translate pages. Also required to show the Translate button on Azuriom’s Pages admin pages. |
 | `extended-translation.navbar` | Translate navbar items. Also required to show the Translate button on Azuriom’s Navbar admin pages. |
+| `extended-translation.faq` | Translate FAQ questions. Only listed when the FAQ plugin is installed and enabled. Also required to show the Translate button on FAQ admin pages. |
 | `extended-translation.settings` | Open and save the plugin settings (enabled languages and inject buttons). |
 
 ### Theme language dropdown
@@ -25,7 +28,9 @@ Grant these from **Admin → Roles**. Admin roles already have every permission.
 
 ## Français
 
-Plugin Azuriom pour traduire les articles, les pages et les éléments de la barre de navigation depuis le panel administrateur, sans modifier le coeur d’Azuriom. Il fournit aussi un menu déroulant de langue que les thèmes peuvent inclure.
+Plugin Azuriom pour traduire les articles, les pages, les éléments de la barre de navigation et les questions de la FAQ depuis le panel administrateur, sans modifier le coeur d’Azuriom. Il fournit aussi un menu déroulant de langue que les thèmes peuvent inclure.
+
+La traduction de la FAQ est facultative : installez et activez le plugin [FAQ](https://market.azuriom.com/resources/4) pour afficher l’entrée FAQ dans **Admin → Traductions**.
 
 ### Permissions
 
@@ -38,6 +43,7 @@ Attribuez-les depuis **Admin → Rôles**. Les rôles administrateur ont déjà 
 | `extended-translation.posts` | Traduire les articles. Aussi requis pour afficher le bouton Traduire sur les pages d’administration Articles d’Azuriom. |
 | `extended-translation.pages` | Traduire les pages. Aussi requis pour afficher le bouton Traduire sur les pages d’administration Pages d’Azuriom. |
 | `extended-translation.navbar` | Traduire les éléments de la barre de navigation. Aussi requis pour afficher le bouton Traduire sur les pages d’administration Navbar d’Azuriom. |
+| `extended-translation.faq` | Traduire les questions de la FAQ. Affiché seulement si le plugin FAQ est installé et activé. Aussi requis pour afficher le bouton Traduire sur les pages d’administration de la FAQ. |
 | `extended-translation.settings` | Ouvrir et enregistrer les paramètres du plugin (langues activées et boutons d’injection). |
 
 ### Menu déroulant de langue

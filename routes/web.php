@@ -1,6 +1,6 @@
 <?php
 
-use Azuriom\Plugin\ExtendedTranslation\Controllers\LanguageController;
+use Azuriom\Plugin\ExtendedTranslation\Core\Locale\LanguageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LanguageController::class, 'index'])->name('language');

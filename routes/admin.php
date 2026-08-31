@@ -1,10 +1,12 @@
 <?php
 
-use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\NavbarElementTranslationController;
-use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\PageTranslationController;
-use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\PostTranslationController;
-use Azuriom\Plugin\ExtendedTranslation\Controllers\Admin\SettingsController;
-use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
+use Azuriom\Plugin\ExtendedTranslation\Core\Navbar\NavbarElementTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Core\Pages\PageTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Core\Posts\PostTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Core\Settings\SettingsController;
+use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\QuestionTranslationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('can:'.Permissions::SETTINGS)->group(function () {
@@ -50,3 +52,18 @@ Route::middleware('can:'.Permissions::NAVBAR)->group(function () {
         ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
         ->name('navbar.destroy');
 });
+
+if (FaqIntegration::available()) {
+    Route::middleware('can:'.FaqIntegration::QUESTIONS)->group(function () {
+        Route::get('/faq', [QuestionTranslationController::class, 'index'])->name('faq.index');
+        Route::get('/faq/{question}/{locale}', [QuestionTranslationController::class, 'edit'])
+            ->where(['question' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('faq.edit');
+        Route::put('/faq/{question}/{locale}', [QuestionTranslationController::class, 'update'])
+            ->where(['question' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('faq.update');
+        Route::delete('/faq/{question}/{locale}', [QuestionTranslationController::class, 'destroy'])
+            ->where(['question' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('faq.destroy');
+    });
+}

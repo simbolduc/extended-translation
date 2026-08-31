@@ -10,23 +10,38 @@ use Azuriom\Models\Page;
 use Azuriom\Models\Permission;
 use Azuriom\Models\Post;
 use Azuriom\Models\Setting;
-use Azuriom\Plugin\ExtendedTranslation\Middleware\SetLocale;
-use Azuriom\Plugin\ExtendedTranslation\Support\LocaleCatalog;
-use Azuriom\Plugin\ExtendedTranslation\Support\NavbarTranslator;
-use Azuriom\Plugin\ExtendedTranslation\Support\PageTranslator;
-use Azuriom\Plugin\ExtendedTranslation\Support\Permissions;
-use Azuriom\Plugin\ExtendedTranslation\Support\PostTranslator;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminNavbarComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPagesComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\AdminPostsComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\LanguageSelectorComposer;
-use Azuriom\Plugin\ExtendedTranslation\View\Composers\TranslateNavbarComposer;
-use Illuminate\Support\Facades\Gate;
+use Azuriom\Plugin\ExtendedTranslation\Core\Locale\LocaleCatalog;
+use Azuriom\Plugin\ExtendedTranslation\Core\Locale\LanguageSelectorComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Locale\SetLocale;
+use Azuriom\Plugin\ExtendedTranslation\Core\Navbar\AdminNavbarComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Navbar\NavbarTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Core\Navbar\TranslateNavbarComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Pages\AdminPagesComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Pages\PageTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Core\PluginIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Core\Posts\AdminPostsComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Posts\PostTranslator;
+use Azuriom\Plugin\ExtendedTranslation\Core\RegistersAdminInjectComposer;
+use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
 use Illuminate\Support\Facades\View;
-use Illuminate\View\View as IlluminateView;
 
 class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
 {
+    use RegistersAdminInjectComposer;
+
+    /**
+     * Optional plugin adapters. Add a class here when integrating another plugin.
+     *
+     * @return list<class-string<PluginIntegration>>
+     */
+    protected function integrations(): array
+    {
+        return [
+            FaqIntegration::class,
+        ];
+    }
+
     /**
      * Register any plugin services.
      */
@@ -38,6 +53,10 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
         $this->app->singleton(NavbarTranslator::class);
 
         EncryptCookies::except(LocaleCatalog::COOKIE);
+
+        foreach ($this->enabledIntegrations() as $integration) {
+            $integration->register($this->app);
+        }
     }
 
     /**
@@ -121,6 +140,11 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
                 'model' => Page::class,
             ],
         ]);
+
+        foreach ($this->enabledIntegrations() as $integration) {
+            Permission::registerPermissions($integration->permissions());
+            $integration->boot($this->app);
+        }
     }
 
     /**
@@ -142,54 +166,62 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
      */
     protected function adminNavigation(): array
     {
+        $navPermissions = [
+            Permissions::POSTS,
+            Permissions::PAGES,
+            Permissions::NAVBAR,
+            Permissions::SETTINGS,
+        ];
+        $navItems = [
+            'extended-translation.admin.posts.index' => [
+                'name' => trans('extended-translation::admin.nav.posts'),
+                'permission' => Permissions::POSTS,
+            ],
+            'extended-translation.admin.pages.index' => [
+                'name' => trans('extended-translation::admin.nav.pages'),
+                'permission' => Permissions::PAGES,
+            ],
+            'extended-translation.admin.navbar.index' => [
+                'name' => trans('extended-translation::admin.nav.navbar'),
+                'permission' => Permissions::NAVBAR,
+            ],
+        ];
+
+        foreach ($this->enabledIntegrations() as $integration) {
+            $navPermissions = [...$navPermissions, ...$integration->adminNavPermissions()];
+            $navItems = [...$navItems, ...$integration->adminNavItems()];
+        }
+
+        $navItems['extended-translation.admin.settings'] = [
+            'name' => trans('extended-translation::admin.nav.settings'),
+            'permission' => Permissions::SETTINGS,
+        ];
+
         return [
             'extended-translation' => [
                 'name' => trans('extended-translation::admin.nav.title'),
                 'type' => 'dropdown',
                 'icon' => 'bi bi-translate',
                 'route' => 'extended-translation.admin.*',
-                'permission' => [
-                    Permissions::POSTS,
-                    Permissions::PAGES,
-                    Permissions::NAVBAR,
-                    Permissions::SETTINGS,
-                ],
-                'items' => [
-                    'extended-translation.admin.posts.index' => [
-                        'name' => trans('extended-translation::admin.nav.posts'),
-                        'permission' => Permissions::POSTS,
-                    ],
-                    'extended-translation.admin.pages.index' => [
-                        'name' => trans('extended-translation::admin.nav.pages'),
-                        'permission' => Permissions::PAGES,
-                    ],
-                    'extended-translation.admin.navbar.index' => [
-                        'name' => trans('extended-translation::admin.nav.navbar'),
-                        'permission' => Permissions::NAVBAR,
-                    ],
-                    'extended-translation.admin.settings' => [
-                        'name' => trans('extended-translation::admin.nav.settings'),
-                        'permission' => Permissions::SETTINGS,
-                    ],
-                ],
+                'permission' => $navPermissions,
+                'items' => $navItems,
             ],
         ];
     }
 
     /**
-     * Register a core-admin inject composer only when the user can translate that resource.
-     *
-     * @param  array<int, string>  $views
-     * @param  class-string  $composer
+     * @return list<PluginIntegration>
      */
-    protected function registerAdminInjectComposer(array $views, string $composer, string $permission): void
+    protected function enabledIntegrations(): array
     {
-        View::composer($views, function (IlluminateView $view) use ($composer, $permission): void {
-            if (! Gate::allows($permission)) {
-                return;
-            }
+        $enabled = [];
 
-            app($composer)->compose($view);
-        });
+        foreach ($this->integrations() as $class) {
+            if ($class::available()) {
+                $enabled[] = new $class();
+            }
+        }
+
+        return $enabled;
     }
 }

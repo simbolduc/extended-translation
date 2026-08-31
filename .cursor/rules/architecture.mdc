@@ -1,0 +1,34 @@
+---
+description: Extended Translation architecture — core vs optional plugin integrations
+globs: plugins/extended-translation/**
+alwaysApply: false
+---
+
+# Extended Translation architecture
+
+Azuriom natives live in `src/Core/`. Optional plugins live in `src/Integrations/{Name}/`. Do not clone a Laravel tree (Providers, routes, resources, database) inside an integration.
+
+## Layout
+
+- `src/Core/{Posts,Pages,Navbar,Locale,Settings,Support}` — posts, pages, navbar, language cookie, settings
+- `src/Integrations/Faq` — only PHP that mentions the FAQ plugin
+- `src/Providers` — the two Azuriom providers in `plugin.json`
+- Views: `resources/views/` (FAQ screens in `admin/faq/`)
+- Lang: `resources/lang/{locale}/` (`admin.php`, `messages.php`, `faq.php`)
+- Migrations: `database/migrations/` — always add them here so Azuriom runs them on plugin enable. Do not run migrations from an integration `boot()`.
+- Routes: `routes/web.php` and `routes/admin.php`
+
+## Adding another plugin (e.g. Shop)
+
+1. Declare it optional in `plugin.json`: `"shop?": "^1.0.0"`.
+2. Create a flat folder `src/Integrations/Shop/` with `ShopIntegration` plus the model, translator, controller, request, and composer.
+3. Implement `Azuriom\Plugin\ExtendedTranslation\Core\PluginIntegration`.
+4. Register the class in `ExtendedTranslationServiceProvider::integrations()`.
+5. Guard routes with `ShopIntegration::available()`.
+6. Put lang in `resources/lang/{locale}/shop.php` as `extended-translation::shop.*`.
+7. Put views in `resources/views/admin/shop/`.
+8. Never call `loadTranslationsFrom(..., 'extended-translation')` from an integration — that replaces the plugin lang path and breaks `admin.*` keys.
+
+## Rule of thumb
+
+If a file would look the same for Shop as for FAQ, it belongs in Core. If it `use`s `Azuriom\Plugin\FAQ\...` (or Shop, etc.), it belongs in that integration folder.
