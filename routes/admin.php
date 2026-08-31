@@ -7,6 +7,10 @@ use Azuriom\Plugin\ExtendedTranslation\Core\Settings\SettingsController;
 use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\QuestionTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\CategoryTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\PageTranslationController as WikiPageTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\WikiController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\WikiIntegration;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('can:'.Permissions::SETTINGS)->group(function () {
@@ -65,5 +69,29 @@ if (FaqIntegration::available()) {
         Route::delete('/faq/{question}/{locale}', [QuestionTranslationController::class, 'destroy'])
             ->where(['question' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
             ->name('faq.destroy');
+    });
+}
+
+if (WikiIntegration::available()) {
+    Route::middleware('can:'.WikiIntegration::WIKI)->group(function () {
+        Route::get('/wiki', [WikiController::class, 'index'])->name('wiki.index');
+        Route::get('/wiki/pages/{wikiPage}/{locale}', [WikiPageTranslationController::class, 'edit'])
+            ->where(['wikiPage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.pages.edit');
+        Route::put('/wiki/pages/{wikiPage}/{locale}', [WikiPageTranslationController::class, 'update'])
+            ->where(['wikiPage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.pages.update');
+        Route::delete('/wiki/pages/{wikiPage}/{locale}', [WikiPageTranslationController::class, 'destroy'])
+            ->where(['wikiPage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.pages.destroy');
+        Route::get('/wiki/categories/{wikiCategory}/{locale}', [CategoryTranslationController::class, 'edit'])
+            ->where(['wikiCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.categories.edit');
+        Route::put('/wiki/categories/{wikiCategory}/{locale}', [CategoryTranslationController::class, 'update'])
+            ->where(['wikiCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.categories.update');
+        Route::delete('/wiki/categories/{wikiCategory}/{locale}', [CategoryTranslationController::class, 'destroy'])
+            ->where(['wikiCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('wiki.categories.destroy');
     });
 }

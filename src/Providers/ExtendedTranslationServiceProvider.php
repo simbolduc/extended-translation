@@ -24,6 +24,7 @@ use Azuriom\Plugin\ExtendedTranslation\Core\Posts\PostTranslator;
 use Azuriom\Plugin\ExtendedTranslation\Core\RegistersAdminInjectComposer;
 use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\WikiIntegration;
 use Illuminate\Support\Facades\View;
 
 class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
@@ -39,6 +40,7 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
     {
         return [
             FaqIntegration::class,
+            WikiIntegration::class,
         ];
     }
 

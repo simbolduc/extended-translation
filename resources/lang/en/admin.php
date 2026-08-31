@@ -37,12 +37,12 @@ return [
 
     'settings' => [
         'title' => 'Settings',
-        'help' => 'Choose the languages that should appear when translating news articles, pages, and navbar items, on the public language page, and in the theme language dropdown.',
+        'help' => 'Choose the languages that should appear when translating news articles, pages, navbar items, and optional plugins such as FAQ and Wiki, on the public language page, and in the theme language dropdown.',
         'languages_heading' => 'Languages',
         'available' => 'Available languages',
         'default' => 'Site language',
         'inject_heading' => 'Azuriom admin pages',
-        'inject_help' => 'When enabled, Translate buttons are added to Azuriom’s original Posts, Pages, and Navbar screens. Turn this off if an Azuriom update changes those pages and the extra buttons cause problems. The plugin’s own translation pages keep working either way.',
+        'inject_help' => 'When enabled, Translate buttons are added to Azuriom’s original Posts, Pages, and Navbar screens, and to supported plugin admin screens. Turn this off if an Azuriom update changes those pages and the extra buttons cause problems. The plugin’s own translation pages keep working either way.',
         'inject_label' => 'Inject Translate buttons into Azuriom’s original admin pages',
     ],
 

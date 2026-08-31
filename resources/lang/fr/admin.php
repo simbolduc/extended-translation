@@ -37,12 +37,12 @@ return [
 
     'settings' => [
         'title' => 'Paramètres',
-        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages et les éléments du menu, ainsi que sur la page publique de choix de langue et dans le menu déroulant des thèmes.',
+        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages, les éléments du menu et les plugins facultatifs tels que la FAQ et le Wiki, ainsi que sur la page publique de choix de langue et dans le menu déroulant des thèmes.',
         'languages_heading' => 'Langues',
         'available' => 'Langues disponibles',
         'default' => 'Langue du site',
         'inject_heading' => 'Pages d’administration Azuriom',
-        'inject_help' => 'Lorsque cette option est activée, des boutons Traduire sont ajoutés aux écrans originaux Articles, Pages et Barre de navigation d’Azuriom. Désactivez-la si une mise à jour d’Azuriom modifie ces pages et que les boutons posent problème. Les pages de traduction du plugin continuent de fonctionner dans tous les cas.',
+        'inject_help' => 'Lorsque cette option est activée, des boutons Traduire sont ajoutés aux écrans originaux Articles, Pages et Barre de navigation d’Azuriom, ainsi qu’aux écrans d’administration des plugins pris en charge. Désactivez-la si une mise à jour d’Azuriom modifie ces pages et que les boutons posent problème. Les pages de traduction du plugin continuent de fonctionner dans tous les cas.',
         'inject_label' => 'Ajouter les boutons Traduire aux pages d’administration originales d’Azuriom',
     ],
 

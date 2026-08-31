@@ -12,9 +12,10 @@ Azuriom natives live in `src/Core/`. Optional plugins live in `src/Integrations/
 
 - `src/Core/{Posts,Pages,Navbar,Locale,Settings,Support}` — posts, pages, navbar, language cookie, settings
 - `src/Integrations/Faq` — only PHP that mentions the FAQ plugin
+- `src/Integrations/Wiki` — only PHP that mentions the Wiki plugin
 - `src/Providers` — the two Azuriom providers in `plugin.json`
-- Views: `resources/views/` (FAQ screens in `admin/faq/`)
-- Lang: `resources/lang/{locale}/` (`admin.php`, `messages.php`, `faq.php`)
+- Views: `resources/views/` (FAQ screens in `admin/faq/`, Wiki screens in `admin/wiki/`)
+- Lang: `resources/lang/{locale}/` (`admin.php`, `messages.php`, `faq.php`, `wiki.php`)
 - Migrations: `database/migrations/` — always add them here so Azuriom runs them on plugin enable. Do not run migrations from an integration `boot()`.
 - Routes: `routes/web.php` and `routes/admin.php`
 
