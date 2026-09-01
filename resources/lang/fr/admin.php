@@ -37,7 +37,7 @@ return [
 
     'settings' => [
         'title' => 'Paramètres',
-        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages, les éléments du menu et les plugins facultatifs tels que la FAQ, le Wiki et Vote, ainsi que sur la page publique de choix de langue et dans le menu déroulant des thèmes.',
+        'help' => 'Choisissez les langues proposées pour traduire les articles, les pages, les éléments du menu et les plugins facultatifs tels que la FAQ, le Wiki, Vote et Changelog, ainsi que sur la page publique de choix de langue et dans le menu déroulant des thèmes.',
         'languages_heading' => 'Langues',
         'available' => 'Langues disponibles',
         'default' => 'Langue du site',

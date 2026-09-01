@@ -37,7 +37,7 @@ return [
 
     'settings' => [
         'title' => 'Settings',
-        'help' => 'Choose the languages that should appear when translating news articles, pages, navbar items, and optional plugins such as FAQ, Wiki, and Vote, on the public language page, and in the theme language dropdown.',
+        'help' => 'Choose the languages that should appear when translating news articles, pages, navbar items, and optional plugins such as FAQ, Wiki, Vote, and Changelog, on the public language page, and in the theme language dropdown.',
         'languages_heading' => 'Languages',
         'available' => 'Available languages',
         'default' => 'Site language',

@@ -5,6 +5,11 @@ use Azuriom\Plugin\ExtendedTranslation\Core\Pages\PageTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Core\Posts\PostTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Core\Settings\SettingsController;
 use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\CategoryTranslationController as ChangelogCategoryTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\ChangelogController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\ChangelogIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\TitleTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\UpdateTranslationController as ChangelogUpdateTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\QuestionTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\RewardTranslationController;
@@ -110,5 +115,38 @@ if (WikiIntegration::available()) {
         Route::delete('/wiki/categories/{wikiCategory}/{locale}', [CategoryTranslationController::class, 'destroy'])
             ->where(['wikiCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
             ->name('wiki.categories.destroy');
+    });
+}
+
+if (ChangelogIntegration::available()) {
+    Route::middleware('can:'.ChangelogIntegration::CHANGELOG)->group(function () {
+        Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog.index');
+        Route::get('/changelog/title/{locale}', [TitleTranslationController::class, 'edit'])
+            ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
+            ->name('changelog.title.edit');
+        Route::put('/changelog/title/{locale}', [TitleTranslationController::class, 'update'])
+            ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
+            ->name('changelog.title.update');
+        Route::delete('/changelog/title/{locale}', [TitleTranslationController::class, 'destroy'])
+            ->where('locale', '[A-Za-z][A-Za-z0-9_-]*')
+            ->name('changelog.title.destroy');
+        Route::get('/changelog/updates/{changelogUpdate}/{locale}', [ChangelogUpdateTranslationController::class, 'edit'])
+            ->where(['changelogUpdate' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.updates.edit');
+        Route::put('/changelog/updates/{changelogUpdate}/{locale}', [ChangelogUpdateTranslationController::class, 'update'])
+            ->where(['changelogUpdate' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.updates.update');
+        Route::delete('/changelog/updates/{changelogUpdate}/{locale}', [ChangelogUpdateTranslationController::class, 'destroy'])
+            ->where(['changelogUpdate' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.updates.destroy');
+        Route::get('/changelog/categories/{changelogCategory}/{locale}', [ChangelogCategoryTranslationController::class, 'edit'])
+            ->where(['changelogCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.categories.edit');
+        Route::put('/changelog/categories/{changelogCategory}/{locale}', [ChangelogCategoryTranslationController::class, 'update'])
+            ->where(['changelogCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.categories.update');
+        Route::delete('/changelog/categories/{changelogCategory}/{locale}', [ChangelogCategoryTranslationController::class, 'destroy'])
+            ->where(['changelogCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('changelog.categories.destroy');
     });
 }
