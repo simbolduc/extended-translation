@@ -7,6 +7,8 @@ use Azuriom\Plugin\ExtendedTranslation\Core\Settings\SettingsController;
 use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\QuestionTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\RewardTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\VoteIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\CategoryTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\PageTranslationController as WikiPageTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\WikiController;
@@ -69,6 +71,21 @@ if (FaqIntegration::available()) {
         Route::delete('/faq/{question}/{locale}', [QuestionTranslationController::class, 'destroy'])
             ->where(['question' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
             ->name('faq.destroy');
+    });
+}
+
+if (VoteIntegration::available()) {
+    Route::middleware('can:'.VoteIntegration::REWARDS)->group(function () {
+        Route::get('/vote', [RewardTranslationController::class, 'index'])->name('vote.index');
+        Route::get('/vote/{voteReward}/{locale}', [RewardTranslationController::class, 'edit'])
+            ->where(['voteReward' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('vote.edit');
+        Route::put('/vote/{voteReward}/{locale}', [RewardTranslationController::class, 'update'])
+            ->where(['voteReward' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('vote.update');
+        Route::delete('/vote/{voteReward}/{locale}', [RewardTranslationController::class, 'destroy'])
+            ->where(['voteReward' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('vote.destroy');
     });
 }
 

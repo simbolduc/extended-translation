@@ -2,7 +2,7 @@
     "id": "extended-translation",
     "name": "Extended Translation",
     "description": "Extended translation plugin for Azuriom.",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "url": "https://simbolduc.ca",
     "authors": [
         "coulis"
@@ -14,6 +14,7 @@
     ],
     "dependencies": {
         "faq?": "^1.0.0",
-        "wiki?": "^1.0.0"
+        "wiki?": "^1.0.0",
+        "vote?": "^1.0.0"
     }
 }
