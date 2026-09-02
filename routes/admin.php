@@ -12,6 +12,12 @@ use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\TitleTranslationCo
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\UpdateTranslationController as ChangelogUpdateTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\QuestionTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\CategoryTranslationController as ShopCategoryTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\OfferTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\PackageTranslationController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\ShopController;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\ShopIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\VariableTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\RewardTranslationController;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\VoteIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\CategoryTranslationController;
@@ -115,6 +121,48 @@ if (WikiIntegration::available()) {
         Route::delete('/wiki/categories/{wikiCategory}/{locale}', [CategoryTranslationController::class, 'destroy'])
             ->where(['wikiCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
             ->name('wiki.categories.destroy');
+    });
+}
+
+if (ShopIntegration::available()) {
+    Route::middleware('can:'.ShopIntegration::SHOP)->group(function () {
+        Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+        Route::get('/shop/packages/{shopPackage}/{locale}', [PackageTranslationController::class, 'edit'])
+            ->where(['shopPackage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.packages.edit');
+        Route::put('/shop/packages/{shopPackage}/{locale}', [PackageTranslationController::class, 'update'])
+            ->where(['shopPackage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.packages.update');
+        Route::delete('/shop/packages/{shopPackage}/{locale}', [PackageTranslationController::class, 'destroy'])
+            ->where(['shopPackage' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.packages.destroy');
+        Route::get('/shop/categories/{shopCategory}/{locale}', [ShopCategoryTranslationController::class, 'edit'])
+            ->where(['shopCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.categories.edit');
+        Route::put('/shop/categories/{shopCategory}/{locale}', [ShopCategoryTranslationController::class, 'update'])
+            ->where(['shopCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.categories.update');
+        Route::delete('/shop/categories/{shopCategory}/{locale}', [ShopCategoryTranslationController::class, 'destroy'])
+            ->where(['shopCategory' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.categories.destroy');
+        Route::get('/shop/offers/{shopOffer}/{locale}', [OfferTranslationController::class, 'edit'])
+            ->where(['shopOffer' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.offers.edit');
+        Route::put('/shop/offers/{shopOffer}/{locale}', [OfferTranslationController::class, 'update'])
+            ->where(['shopOffer' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.offers.update');
+        Route::delete('/shop/offers/{shopOffer}/{locale}', [OfferTranslationController::class, 'destroy'])
+            ->where(['shopOffer' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.offers.destroy');
+        Route::get('/shop/variables/{shopVariable}/{locale}', [VariableTranslationController::class, 'edit'])
+            ->where(['shopVariable' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.variables.edit');
+        Route::put('/shop/variables/{shopVariable}/{locale}', [VariableTranslationController::class, 'update'])
+            ->where(['shopVariable' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.variables.update');
+        Route::delete('/shop/variables/{shopVariable}/{locale}', [VariableTranslationController::class, 'destroy'])
+            ->where(['shopVariable' => '[0-9]+', 'locale' => '[A-Za-z][A-Za-z0-9_-]*'])
+            ->name('shop.variables.destroy');
     });
 }
 

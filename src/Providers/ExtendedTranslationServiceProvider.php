@@ -25,6 +25,7 @@ use Azuriom\Plugin\ExtendedTranslation\Core\RegistersAdminInjectComposer;
 use Azuriom\Plugin\ExtendedTranslation\Core\Support\Permissions;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Changelog\ChangelogIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Faq\FaqIntegration;
+use Azuriom\Plugin\ExtendedTranslation\Integrations\Shop\ShopIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Vote\VoteIntegration;
 use Azuriom\Plugin\ExtendedTranslation\Integrations\Wiki\WikiIntegration;
 use Illuminate\Support\Facades\View;
@@ -45,6 +46,7 @@ class ExtendedTranslationServiceProvider extends BasePluginServiceProvider
             WikiIntegration::class,
             VoteIntegration::class,
             ChangelogIntegration::class,
+            ShopIntegration::class,
         ];
     }
 
