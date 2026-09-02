@@ -16,6 +16,7 @@ return [
         'source' => 'Produit source',
         'type' => 'Produit',
         'empty' => 'Aucune catégorie ni produit de boutique pour le moment. Créez-les dans le plugin Boutique, puis traduisez-les ici.',
+        'empty_category' => 'Aucun produit dans cette catégorie.',
     ],
 
     'offers' => [

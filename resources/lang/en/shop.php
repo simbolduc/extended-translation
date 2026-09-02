@@ -16,6 +16,7 @@ return [
         'source' => 'Source package',
         'type' => 'Package',
         'empty' => 'No shop categories or packages yet. Create them in the Shop plugin, then translate them here.',
+        'empty_category' => 'No packages in this category.',
     ],
 
     'offers' => [

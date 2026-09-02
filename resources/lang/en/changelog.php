@@ -9,6 +9,7 @@ return [
 
     'title_row' => [
         'label' => 'Page title',
+        'section' => 'Settings',
         'source' => 'Source title',
         'type' => 'Settings',
     ],
@@ -16,9 +17,11 @@ return [
     'updates' => [
         'source' => 'Source update',
         'type' => 'Update',
+        'empty' => 'No updates in this category.',
     ],
 
     'categories' => [
+        'section' => 'Categories and updates',
         'source' => 'Source category',
         'type' => 'Category',
     ],

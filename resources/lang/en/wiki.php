@@ -10,9 +10,11 @@ return [
     'pages' => [
         'source' => 'Source page',
         'type' => 'Page',
+        'empty' => 'No pages in this category.',
     ],
 
     'categories' => [
+        'section' => 'Categories and pages',
         'source' => 'Source category',
         'type' => 'Category',
     ],

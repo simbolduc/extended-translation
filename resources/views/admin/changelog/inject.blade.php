@@ -39,7 +39,10 @@
 
         if (cfg.titleUrl) {
             const titleInput = document.getElementById('titleInput');
-            addButton(cfg.titleUrl, titleInput);
+            const saveBtn = titleInput && titleInput.form
+                ? titleInput.form.querySelector('button[type="submit"]')
+                : null;
+            addButton(cfg.titleUrl, saveBtn);
         }
 
         if (cfg.changelogCategories) {
